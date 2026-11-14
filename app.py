@@ -14,6 +14,10 @@ def inteiro(value, minimo=0):
 
 
 def run(data):
+    if not isinstance(data, dict):
+        raise ValueError("A entrada deve ser um objeto JSON.")
+    if not isinstance(data["blocos"], list) or any(not isinstance(item, dict) for item in data["blocos"]):
+        raise ValueError("O campo blocos deve ser uma lista de objetos.")
     inicio, fim = inteiro(data["inicio"], 1), inteiro(data["fim"], 1)
     if fim < inicio or fim - inicio > 200:
         raise ValueError("Informe um intervalo crescente de até 201 versículos.")
@@ -53,3 +57,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
