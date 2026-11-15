@@ -13,7 +13,18 @@ python -m unittest -v
 
 ## Uso
 
-Informe a referência, o primeiro e último versículo da perícope e os blocos já observados. Os intervalos são inclusivos. O relatório devolve lacunas e a cobertura percentual.
+Informe a referência, o primeiro e último versículo da perícope e os blocos já observados. Os intervalos são inclusivos. O relatório devolve os versículos sem observação em `sem_observacao`, as lacunas contíguas em `lacunas` e a cobertura percentual. Cada lacuna usa `inicio` e `fim` inclusivos; quando não há lacunas, a lista é vazia. Os blocos sobrepostos são contados uma única vez.
+
+Exemplo de saída para `exemplo.json`:
+
+```json
+{
+  "referencia": "João 15:1–8",
+  "sem_observacao": [4],
+  "lacunas": [{"inicio": 4, "fim": 4}],
+  "cobertura_percentual": 87.5
+}
+```
 
 ## Fontes e exemplos
 

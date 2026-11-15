@@ -1,5 +1,9 @@
 'Organize uma passagem em blocos e identifique versículos ainda sem observação.'
 
+import argparse
+import json
+from pathlib import Path
+
 
 def texto(value):
     if not isinstance(value, str) or not value.strip():
@@ -11,6 +15,17 @@ def inteiro(value, minimo=0):
     if type(value) is not int or value < minimo:
         raise ValueError(f"Use um número inteiro a partir de {minimo}.")
     return value
+
+
+def agrupar_lacunas(versiculos):
+    """Agrupa versículos ordenados e distintos em intervalos inclusivos."""
+    intervalos = []
+    for versiculo in versiculos:
+        if intervalos and versiculo == intervalos[-1]["fim"] + 1:
+            intervalos[-1]["fim"] = versiculo
+        else:
+            intervalos.append({"inicio": versiculo, "fim": versiculo})
+    return intervalos
 
 
 def run(data):
@@ -30,12 +45,8 @@ def run(data):
         anotados.update(range(primeiro, ultimo + 1))
     faltam = sorted(set(range(inicio, fim + 1)) - anotados)
     return {"referencia": texto(data["referencia"]), "sem_observacao": faltam,
+            "lacunas": agrupar_lacunas(faltam),
             "cobertura_percentual": round(100 * len(anotados) / (fim - inicio + 1), 1)}
-
-
-import argparse
-import json
-from pathlib import Path
 
 
 def main():
@@ -57,4 +68,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
