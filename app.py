@@ -40,16 +40,27 @@ def run(data):
     if fim < inicio or fim - inicio > 200:
         raise ValueError("Informe um intervalo crescente de até 201 versículos.")
     anotados = set()
+    contagem = {}
     for bloco in data["blocos"]:
         primeiro, ultimo = inteiro(bloco["inicio"], 1), inteiro(bloco["fim"], 1)
         if not inicio <= primeiro <= ultimo <= fim:
             raise ValueError("Bloco fora da perícope ou em ordem inversa.")
         texto(bloco["observacao"])
         anotados.update(range(primeiro, ultimo + 1))
+        for versiculo in range(primeiro, ultimo + 1):
+            contagem[versiculo] = contagem.get(versiculo, 0) + 1
     faltam = sorted(set(range(inicio, fim + 1)) - anotados)
-    return {"referencia": texto(data["referencia"]), "sem_observacao": faltam,
-            "lacunas": agrupar_lacunas(faltam),
-            "cobertura_percentual": round(100 * len(anotados) / (fim - inicio + 1), 1)}
+    resultado = {"referencia": texto(data["referencia"]), "sem_observacao": faltam,
+                 "lacunas": agrupar_lacunas(faltam),
+                 "cobertura_percentual": round(100 * len(anotados) / (fim - inicio + 1), 1)}
+    diagnostico = data.get("diagnostico", False)
+    if type(diagnostico) is not bool:
+        raise ValueError("diagnostico deve ser booleano.")
+    if diagnostico:
+        resultado["versiculos_anotados"] = sorted(anotados)
+        resultado["sobreposicoes"] = [{"versiculo": v, "observacoes": n}
+                                      for v, n in sorted(contagem.items()) if n > 1]
+    return resultado
 
 
 def objeto_sem_campos_repetidos(pares):

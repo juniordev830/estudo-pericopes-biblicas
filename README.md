@@ -39,3 +39,8 @@ Também é possível encadear a ferramenta com outro comando usando `-` como ent
 ```bash
 cat exemplo.json | python app.py -
 ```
+
+
+## Novo recurso
+
+Com `diagnostico: true`, a resposta inclui os versículos anotados e os que pertencem a mais de um bloco, sem alterar a cobertura percentual nem o formato padrão.
